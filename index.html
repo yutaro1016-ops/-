@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>水分アラームアプリ</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>💧 水分アラームアプリ</h1>
+      <p class="description">
+        1日の目標水分量と通知間隔を設定すると、必要な摂取量を定期的にお知らせします。
+      </p>
+
+      <section class="card">
+        <h2>設定</h2>
+        <div class="form-grid">
+          <label>
+            目標水分量 (ml)
+            <input id="targetMl" type="number" min="100" step="50" value="2000" />
+          </label>
+          <label>
+            起床時刻
+            <input id="startTime" type="time" value="08:00" />
+          </label>
+          <label>
+            就寝時刻
+            <input id="endTime" type="time" value="22:00" />
+          </label>
+          <label>
+            通知間隔 (分)
+            <input id="intervalMinutes" type="number" min="10" step="5" value="60" />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="startBtn">アラーム開始</button>
+          <button id="stopBtn" class="secondary" disabled>停止</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>進捗</h2>
+        <p id="planText">設定後に開始してください。</p>
+        <div class="progress-track" aria-label="摂取進捗">
+          <div id="progressBar" class="progress-fill"></div>
+        </div>
+        <p id="progressText">摂取量: 0 ml / 0 ml</p>
+      </section>
+
+      <section class="card">
+        <h2>通知ログ</h2>
+        <ul id="logList"></ul>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
