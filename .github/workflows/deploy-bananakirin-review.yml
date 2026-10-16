@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
     paths:
+      - 'index.html'
+      - 'script.js'
+      - 'style.css'
       - 'tiktok-review/**'
       - '.github/workflows/deploy-bananakirin-review.yml'
   workflow_dispatch:
@@ -30,10 +33,15 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
-      - name: Upload review site
+      - name: Build Pages artifact
+        run: |
+          mkdir -p _site
+          cp index.html script.js style.css _site/
+          cp -r tiktok-review _site/tiktok-review
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./tiktok-review
+          path: ./_site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
