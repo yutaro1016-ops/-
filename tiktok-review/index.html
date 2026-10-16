@@ -15,7 +15,8 @@
     label{display:block;margin:16px 0 7px;font-weight:700}input[type=text],input[type=file]{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;background:#fff}
     .check{display:flex;gap:10px;align-items:flex-start;margin:18px 0}.check input{margin-top:5px}.hidden{display:none}
     nav a{margin-right:14px;color:#0f5bd8}.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;font-size:13px;font-weight:700}
-    code{background:#f3f4f6;padding:2px 5px;border-radius:5px}
+    code{background:#f3f4f6;padding:2px 5px;border-radius:5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.item{border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+    ol{padding-left:22px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -25,6 +26,15 @@
     <h1>BananaKirin Studio</h1>
     <p>Create and review short product videos, then upload a draft to TikTok only after explicit user confirmation.</p>
     <nav><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></nav>
+  </section>
+
+  <section class="card">
+    <h2>Integration under review</h2>
+    <div class="grid">
+      <div class="item"><strong>Login Kit</strong><br><code>user.info.basic</code><p class="muted">Connects the user's TikTok account and confirms the destination account before upload.</p></div>
+      <div class="item"><strong>Content Posting API</strong><br><code>video.upload</code><p class="muted">Uploads the user-selected video to TikTok as a draft. The user finishes editing and decides whether to post inside TikTok.</p></div>
+    </div>
+    <p class="muted">Direct Post is not requested. This app does not automatically publish public TikTok posts.</p>
   </section>
 
   <section id="status" class="card">
@@ -48,6 +58,18 @@
       <button type="submit">Upload draft to TikTok Sandbox</button>
     </form>
     <p class="muted">This page does not perform automatic public posting. After upload, the user continues the editing/posting flow inside TikTok.</p>
+  </section>
+
+  <section class="card">
+    <h2>End-to-end review flow</h2>
+    <ol>
+      <li>Connect the Sandbox target account with Login Kit.</li>
+      <li>Confirm the connected account on this page.</li>
+      <li>Select a review-only MP4/MOV video and review the caption.</li>
+      <li>Explicitly confirm the destination and upload action.</li>
+      <li>Upload the video as a TikTok draft using <code>video.upload</code>.</li>
+      <li>Continue in TikTok to review/edit the uploaded draft and decide whether to post.</li>
+    </ol>
   </section>
 
   <section id="resultCard" class="card hidden"><h2>Result</h2><p id="resultText"></p></section>
@@ -76,7 +98,7 @@
     card.classList.remove('hidden');
     if (sent === '1') {
       card.classList.add('ok');
-      text.textContent = 'TikTok accepted the Sandbox draft upload. Publish ID: ' + (q.get('publish_id') || 'not returned') + '.';
+      text.textContent = 'TikTok accepted the Sandbox draft upload. Publish ID: ' + (q.get('publish_id') || 'not returned') + '. Continue in TikTok to review/edit the uploaded draft.';
     } else {
       card.classList.add('warn');
       text.textContent = 'Draft upload failed: ' + error + (q.get('message') ? ' — ' + q.get('message') : '');
