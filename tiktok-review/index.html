@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BananaKirin Studio | TikTok Review</title>
+  <meta name="description" content="BananaKirin Studio TikTok Sandbox review workflow">
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:#111827;background:#f6f7f9}
+    *{box-sizing:border-box} body{margin:0}.wrap{max-width:920px;margin:0 auto;padding:32px 20px 64px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:28px;margin:20px 0;box-shadow:0 8px 30px rgba(17,24,39,.05)}
+    h1,h2{margin-top:0}.muted{color:#6b7280}.ok{background:#ecfdf5;border-color:#a7f3d0}.warn{background:#fff7ed;border-color:#fed7aa}
+    .btn,button{display:inline-block;border:0;border-radius:10px;padding:12px 18px;background:#111827;color:#fff;text-decoration:none;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#374151}.btn:focus,button:focus,input:focus,select:focus{outline:3px solid #bfdbfe;outline-offset:2px}
+    label{display:block;margin:16px 0 7px;font-weight:700}input[type=text],input[type=file],select{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;background:#fff}
+    .check{display:flex;gap:10px;align-items:flex-start;margin:18px 0}.check input{margin-top:5px}.actions{display:flex;gap:12px;flex-wrap:wrap}.hidden{display:none}
+    nav a{margin-right:14px;color:#0f5bd8}.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef2ff;font-size:13px;font-weight:700}
+    code{background:#f3f4f6;padding:2px 5px;border-radius:5px}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="card">
+    <span class="tag">TikTok Sandbox Review</span>
+    <h1>BananaKirin Studio</h1>
+    <p>Create and review short product videos, then send them to TikTok only after explicit user confirmation.</p>
+    <nav><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></nav>
+  </section>
+
+  <section id="status" class="card">
+    <h2>1. Connect TikTok Sandbox</h2>
+    <p id="statusText" class="muted">Connect the TikTok Sandbox target account before testing Content Posting API.</p>
+    <p><a class="btn" href="https://ezgxtwkgnxuohafiupme.supabase.co/functions/v1/bananakirin-studio/connect">Connect TikTok Sandbox</a></p>
+  </section>
+
+  <section id="postCard" class="card hidden">
+    <h2>2. Content Posting API test</h2>
+    <p>Use a review-only video. Direct Post is intentionally limited to <strong>SELF_ONLY</strong>.</p>
+    <form method="post" enctype="multipart/form-data" action="https://ezgxtwkgnxuohafiupme.supabase.co/functions/v1/bananakirin-studio/post-test">
+      <input type="hidden" name="return_to" value="https://yutaro1016-ops.github.io/-/tiktok-review/">
+      <input id="actionToken" type="hidden" name="action_token" value="">
+      <label for="video">Video file (MP4/MOV)</label>
+      <input id="video" type="file" name="video" accept="video/mp4,video/quicktime" required>
+      <label for="title">Caption</label>
+      <input id="title" type="text" name="title" value="BananaKirin Studio Sandbox Review Test" maxlength="150" required>
+      <label for="mode">Action</label>
+      <select id="mode" name="mode">
+        <option value="draft">Draft upload (video.upload)</option>
+        <option value="direct">Direct Post (video.publish, SELF_ONLY)</option>
+      </select>
+      <label class="check"><input type="checkbox" name="confirm" value="yes" required><span>I reviewed the selected video, caption, destination, and privacy setting and explicitly confirm this Sandbox test send.</span></label>
+      <button type="submit">Send test to TikTok Sandbox</button>
+    </form>
+    <p class="muted">No automatic public posting is performed by this review page.</p>
+  </section>
+
+  <section id="resultCard" class="card hidden"><h2>Result</h2><p id="resultText"></p></section>
+</main>
+<script>
+(() => {
+  const q = new URLSearchParams(location.search);
+  const connected = q.get('connected') === '1';
+  const account = q.get('account') || '';
+  const privacy = q.get('privacy') || '';
+  const token = q.get('action_token') || '';
+  const status = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+  const postCard = document.getElementById('postCard');
+  const actionToken = document.getElementById('actionToken');
+  if (connected && token) {
+    status.classList.add('ok');
+    statusText.innerHTML = '<strong>Connected account:</strong> ' + esc(account) + '<br><strong>Available privacy:</strong> ' + esc(privacy) + '<br><strong>user.info.basic:</strong> OK<br><strong>creator_info/query:</strong> OK';
+    postCard.classList.remove('hidden');
+    actionToken.value = token;
+  }
+  const sent = q.get('sent');
+  const error = q.get('error');
+  if (sent === '1' || error) {
+    const card = document.getElementById('resultCard');
+    const text = document.getElementById('resultText');
+    card.classList.remove('hidden');
+    if (sent === '1') {
+      card.classList.add('ok');
+      text.textContent = 'TikTok accepted the Sandbox test send. Mode: ' + (q.get('mode') || '') + '. Publish ID: ' + (q.get('publish_id') || 'not returned') + '.';
+    } else {
+      card.classList.add('warn');
+      text.textContent = 'Test send failed: ' + error + (q.get('message') ? ' — ' + q.get('message') : '');
+    }
+  }
+  function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+})();
+</script>
+</body>
+</html>
